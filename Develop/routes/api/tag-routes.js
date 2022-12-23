@@ -39,7 +39,11 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', (req, res) => {
-
+/* req.body should look like this...
+    {
+      tag_name: "New Tag",
+    }
+  */
   // create a new tag
   Tag.create(req.body)
   .then((tag) => {
@@ -52,7 +56,7 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-  // update a tag's name by its `id` value
+  // update a tag's name by its `id` value  ??? What is inside PUT request ???
   Tag.update(req.body, {
     where: {
       id: req.params.id,
