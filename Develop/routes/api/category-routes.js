@@ -5,11 +5,11 @@ const { Category, Product } = require('../../models');
 
 router.get('/', async (req, res) => {
   // find all categories
-  // be sure to include its associated Products ????
+  // be sure to include its associated Products
 
   try {
     const categoryAll = await Category.findAll({ 
-      include: [{ model: Product }],  ///WHAT is for???
+      include: [{ model: Product }],  // to include assosiated to catrgory products in JSON response
     });
     res.status(200).json(categoryAll);
   } catch (err) {
@@ -19,11 +19,11 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   // find one category by its `id` value
-  // be sure to include its associated Products  ????
+  // be sure to include its associated Products
 
   try {
     const categoryAll = await Category.findByPk(req.params.id, {
-      include: [{ model: Product }],  ///WHAT is for???
+      include: [{ model: Product }],  // to include assosiated to catrgory products in JSON response
     });
 
     if (!categoryAll) {
@@ -42,7 +42,7 @@ router.post('/', (req, res) => {
 
   /* req.body should look like this...
     {
-      category_name: "New Category",
+      "category_name": "New Category"
     }
   */
   // create a new tag

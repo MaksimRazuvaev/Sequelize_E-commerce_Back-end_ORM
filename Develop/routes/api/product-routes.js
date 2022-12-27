@@ -1,5 +1,4 @@
 const router = require('express').Router();
-// const sequelize = require('../../config/connection');  // do I need this???
 const { Product, Category, Tag, ProductTag } = require('../../models');
 
 // The `/api/products` endpoint
@@ -11,7 +10,7 @@ router.get('/', async (req, res) => {
 
   try {
     const productAll = await Product.findAll({ 
-      include: [{ model: Category }, { model: Tag }],  ///WHAT is for???
+      include: [{ model: Category }, { model: Tag }],  // to include assosiated catrgories to product in JSON response
     });
     res.status(200).json(productAll);
   } catch (err) {
@@ -26,7 +25,7 @@ router.get('/:id', async (req, res) => {
 
   try {
     const productAll = await Product.findByPk(req.params.id, {
-      include: [{ model: Category }, { model: Tag }],  ///WHAT is for???
+      include: [{ model: Category }, { model: Tag }],  // to include assosiated catrgories to product in JSON response
     });
 
     if (!productAll) {
@@ -44,10 +43,11 @@ router.get('/:id', async (req, res) => {
 router.post('/', (req, res) => {
   /* req.body should look like this...
     {
-      product_name: "Basketball",
-      price: 200.00,
-      stock: 3,
-      tagIds: [1, 2, 3, 4]
+      "product_name": "POST_Request_New",
+      "price": 200.00,
+      "stock": 3,
+      "category_id": 2,
+      "tagIds": [1, 2, 3, 4]
     }
   */
   Product.create(req.body)
@@ -55,10 +55,11 @@ router.post('/', (req, res) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
       if (req.body.tagIds.length) {
         const productTagIdArr = req.body.tagIds.map((tag_id) => {
+          //productTagIdArr = [{ product_id: 5, tag_id: 1}, { product_id: 5, tag_id: 2}, ... , { product_id: 5, tag_id: 4} ] then
           return {
             product_id: product.id,
             tag_id,
-          };
+          }; 
         });
         return ProductTag.bulkCreate(productTagIdArr);
       }
@@ -74,6 +75,16 @@ router.post('/', (req, res) => {
 
 // update product
 router.put('/:id', (req, res) => {
+/*req.body should look like this...
+ {
+      "product_name": "PUT_request_New",
+      "price": 500.00,
+      "stock": 28,
+	 		"category_id": 2,
+      "tagIds": [3]
+    }
+*/
+
   // update product data
   Product.update(req.body, {
     where: {

@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const sequelize = require('../../config/connection');  // do I need this???
 const { Tag, Product, ProductTag } = require('../../models');
 
 // The `/api/tags` endpoint
@@ -10,7 +9,7 @@ router.get('/', async (req, res) => {
 
   try {
     const tagsAll = await Tag.findAll({ 
-      include: [{ model: Product }],  ///WHAT is for???
+      include: [{ model: Product }],  
     });
     res.status(200).json(tagsAll);
   } catch (err) {
@@ -24,7 +23,8 @@ router.get('/:id', async (req, res) => {
 
   try {
     const tagsAll = await Tag.findByPk(req.params.id, {
-      include: [{ model: Product }],  ///WHAT is for???
+      include: [{ model: Product, through: ProductTag }],  // to include assosiated products to tag in JSON response
+
     });
 
     if (!tagsAll) {
@@ -41,7 +41,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', (req, res) => {
 /* req.body should look like this...
     {
-      tag_name: "New Tag",
+      "tag_name": "New Tag"
     }
   */
   // create a new tag
@@ -56,7 +56,7 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-  // update a tag's name by its `id` value  ??? What is inside PUT request ???
+  // update a tag's name by its `id` value
   Tag.update(req.body, {
     where: {
       id: req.params.id,
