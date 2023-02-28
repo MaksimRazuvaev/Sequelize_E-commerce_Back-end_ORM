@@ -24,6 +24,12 @@ Back-end application which is ready to be connected to the front-end.
 
 https://app.castify.com/view/6f980466-afa7-4316-a017-ce01f4a0f78a
 
+## Technologies
+
+Express
+Sequelize 
+MySQL
+
 ## Credits
 
 N/A
